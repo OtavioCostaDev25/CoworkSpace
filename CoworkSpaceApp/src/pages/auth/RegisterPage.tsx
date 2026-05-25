@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, TextField, Typography, Paper, Alert, CircularProgress } from '@mui/material';
@@ -11,7 +11,13 @@ import { type AuthResponse } from '../../types';
 const schema = z.object({
   name: z.string().min(3, 'Mínimo 3 caracteres'),
   email: z.string().email('Email inválido'),
-  phone: z.string().min(10, 'Telefone inválido'),
+  phone: z
+    .string()
+    .refine((value) => {
+      const digits = value.replace(/\D/g, '');
+      return digits.length >= 10 && digits.length <= 11;
+    }, 'Telefone deve ter 10 ou 11 dígitos')
+    .transform((value) => value.replace(/\D/g, '')),
   password: z.string().min(6, 'Mínimo 6 caracteres'),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -27,9 +33,16 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const { control, register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
+
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 11);
+    if (digits.length <= 6) return digits;
+    const dashIndex = digits.length === 11 ? 7 : 6;
+    return `${digits.slice(0, dashIndex)}-${digits.slice(dashIndex)}`;
+  };
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -47,8 +60,17 @@ export default function RegisterPage() {
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', bgcolor: '#f5f5f5' }}>
-      <Paper elevation={3} sx={{ p: 4, width: '100%', maxWidth: 400 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        bgcolor: '#f5f5f5',
+        px: 2,
+      }}
+    >
+      <Paper elevation={3} sx={{ p: { xs: 3, sm: 4 }, width: '100%', maxWidth: 400 }}>
         <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3, textAlign: 'center' }}>
           Criar conta
         </Typography>
@@ -62,7 +84,22 @@ export default function RegisterPage() {
         >
           <TextField label="Nome" fullWidth {...register('name')} error={!!errors.name} helperText={errors.name?.message} />
           <TextField label="Email" type="email" fullWidth {...register('email')} error={!!errors.email} helperText={errors.email?.message} />
-          <TextField label="Telefone" fullWidth {...register('phone')} error={!!errors.phone} helperText={errors.phone?.message} />
+          <Controller
+            name="phone"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                label="Telefone"
+                fullWidth
+                inputProps={{ inputMode: 'numeric' }}
+                value={field.value}
+                onChange={(event) => field.onChange(formatPhone(event.target.value))}
+                error={!!errors.phone}
+                helperText={errors.phone?.message}
+              />
+            )}
+          />
           <TextField label="Senha" type="password" fullWidth {...register('password')} error={!!errors.password} helperText={errors.password?.message} />
           <TextField label="Confirmar Senha" type="password" fullWidth {...register('confirmPassword')} error={!!errors.confirmPassword} helperText={errors.confirmPassword?.message} />
           <Button type="submit" variant="contained" size="large" disabled={loading}>

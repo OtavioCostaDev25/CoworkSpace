@@ -41,8 +41,17 @@ export default function LoginPage() {
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', bgcolor: '#f5f5f5' }}>
-      <Paper elevation={3} sx={{ p: 4, width: '100%', maxWidth: 400 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        bgcolor: '#f5f5f5',
+        px: 2,
+      }}
+    >
+      <Paper elevation={3} sx={{ p: { xs: 3, sm: 4 }, width: '100%', maxWidth: 400 }}>
         <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3, textAlign: 'center' }}>
           CoworkSpace
         </Typography>

@@ -34,13 +34,27 @@ export default function RoomsPage() {
   return (
     <>
       <Navbar />
-      <Box sx={{ p: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+      <Box sx={{ p: { xs: 2, sm: 4 } }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: { xs: 'flex-start', sm: 'center' },
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: { xs: 2, sm: 0 },
+            mb: 3,
+          }}
+        >
           <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
             Salas disponíveis
           </Typography>
           {token && (
-            <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/rooms/new')}>
+            <Button
+              variant="contained"
+              startIcon={<Add />}
+              onClick={() => navigate('/rooms/new')}
+              sx={{ width: { xs: '100%', sm: 'auto' } }}
+            >
               Anunciar sala
             </Button>
           )}

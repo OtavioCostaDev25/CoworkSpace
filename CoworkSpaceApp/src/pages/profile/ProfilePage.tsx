@@ -94,8 +94,17 @@ export default function ProfilePage() {
   return (
     <>
       <Navbar />
-      <Box sx={{ p: 4, maxWidth: 600, mx: 'auto' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 4 }}>
+      <Box sx={{ p: { xs: 2, sm: 4 }, maxWidth: 600, mx: 'auto' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            mb: 4,
+            flexDirection: { xs: 'column', sm: 'row' },
+            textAlign: { xs: 'center', sm: 'left' },
+          }}
+        >
           <Person fontSize="large" />
           <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
             Meu perfil
@@ -103,7 +112,7 @@ export default function ProfilePage() {
         </Box>
 
         {/* Dados pessoais */}
-        <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+        <Paper elevation={2} sx={{ p: { xs: 2, sm: 3 }, mb: 4 }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
             Dados pessoais
           </Typography>
@@ -134,7 +143,12 @@ export default function ProfilePage() {
               error={!!profileErrors.phone}
               helperText={profileErrors.phone?.message}
             />
-            <Button type="submit" variant="contained" disabled={profileLoading} sx={{ alignSelf: 'flex-end' }}>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={profileLoading}
+              sx={{ alignSelf: { xs: 'stretch', sm: 'flex-end' } }}
+            >
               {profileLoading ? <CircularProgress size={24} /> : 'Salvar alterações'}
             </Button>
           </Box>
@@ -143,7 +157,7 @@ export default function ProfilePage() {
         <Divider sx={{ mb: 4 }} />
 
         {/* Alterar senha */}
-        <Paper elevation={2} sx={{ p: 3 }}>
+        <Paper elevation={2} sx={{ p: { xs: 2, sm: 3 } }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
             Alterar senha
           </Typography>
@@ -180,7 +194,12 @@ export default function ProfilePage() {
               error={!!passwordErrors.confirmPassword}
               helperText={passwordErrors.confirmPassword?.message}
             />
-            <Button type="submit" variant="contained" disabled={passwordLoading} sx={{ alignSelf: 'flex-end' }}>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={passwordLoading}
+              sx={{ alignSelf: { xs: 'stretch', sm: 'flex-end' } }}
+            >
               {passwordLoading ? <CircularProgress size={24} /> : 'Alterar senha'}
             </Button>
           </Box>

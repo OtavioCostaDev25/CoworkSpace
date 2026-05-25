@@ -55,7 +55,7 @@ export default function MyRoomsBookingsPage() {
   return (
     <>
       <Navbar />
-      <Box sx={{ p: 4 }}>
+      <Box sx={{ p: { xs: 2, sm: 4 } }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 3 }}>
           Reservas das minhas salas
         </Typography>
@@ -66,8 +66,8 @@ export default function MyRoomsBookingsPage() {
           <Alert severity="info">Nenhuma reserva encontrada para suas salas.</Alert>
         )}
 
-        <TableContainer component={Paper}>
-          <Table>
+        <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
+          <Table sx={{ minWidth: 900 }}>
             <TableHead>
               <TableRow>
                 <TableCell><strong>Sala</strong></TableCell>

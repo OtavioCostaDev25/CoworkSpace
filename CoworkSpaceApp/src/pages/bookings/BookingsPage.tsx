@@ -43,7 +43,7 @@ export default function BookingsPage() {
   return (
     <>
       <Navbar />
-      <Box sx={{ p: 4 }}>
+      <Box sx={{ p: { xs: 2, sm: 4 } }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 3 }}>
           Minhas Reservas
         </Typography>

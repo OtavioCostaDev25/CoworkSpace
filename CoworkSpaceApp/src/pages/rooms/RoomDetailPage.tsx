@@ -74,7 +74,7 @@ export default function RoomDetailPage() {
   return (
     <>
       <Navbar />
-      <Box sx={{ p: 4, maxWidth: 900, mx: 'auto' }}>
+      <Box sx={{ p: { xs: 2, sm: 4 }, maxWidth: 900, mx: 'auto' }}>
         <Button startIcon={<ArrowBack />} onClick={() => navigate('/rooms')} sx={{ mb: 2 }}>
           Voltar
         </Button>
@@ -84,13 +84,22 @@ export default function RoomDetailPage() {
             component="img"
             src={`http://localhost:5000${room.images[0]}`}
             alt={room.name}
-            sx={{ width: '100%', height: 320, objectFit: 'cover', borderRadius: 2, mb: 3 }}
+            sx={{ width: '100%', height: { xs: 200, sm: 320 }, objectFit: 'cover', borderRadius: 2, mb: 3 }}
           />
         )}
 
-        <Grid container spacing={4}>
+        <Grid container spacing={{ xs: 2, md: 4 }}>
           <Grid size={{ xs: 12, md: 7 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: { xs: 'flex-start', sm: 'center' },
+                flexDirection: { xs: 'column', sm: 'row' },
+                gap: { xs: 1, sm: 0 },
+                mb: 1,
+              }}
+            >
               <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{room.name}</Typography>
               <Chip label={room.available ? 'Disponível' : 'Indisponível'} color={room.available ? 'success' : 'error'} />
             </Box>
