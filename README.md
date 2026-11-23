@@ -24,4 +24,19 @@ docker compose up -d
 pnpm install
 pnpm --filter @coworkspace/api exec prisma generate
 pnpm --filter @coworkspace/api exec prisma migrate dev --name init
+pnpm --filter @coworkspace/api prisma:seed
 ```
+
+## Teste visual local
+
+Com Docker Desktop ativo:
+
+```bash
+docker compose up -d
+pnpm --filter @coworkspace/api prisma:migrate --name init
+pnpm --filter @coworkspace/api prisma:seed
+pnpm dev
+```
+
+Abra `http://localhost:3001`, crie uma conta ou use `demo@coworkspace.local`
+com a senha `Cowork123!`. A documentação da API fica em `http://localhost:3000/docs`.

@@ -2,7 +2,7 @@
   "name": "@coworkspace/web",
   "private": true,
   "scripts": {
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --port 3001",
     "build": "nuxt build",
     "lint": "echo 'lint pending'"
   },
