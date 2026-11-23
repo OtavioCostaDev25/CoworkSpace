@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AvailabilityDto } from './dto/availability.dto';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { ReservationsService } from './reservations.service';
 
@@ -16,5 +17,15 @@ export class ReservationsController {
   @Get('mine')
   mine(@Req() request: { user: { id: string } }) {
     return this.reservations.findForUser(request.user.id);
+  }
+
+  @Get('rooms/:roomId/availability')
+  availability(@Param('roomId') roomId: string, @Query() dto: AvailabilityDto) {
+    return this.reservations.availability(roomId, dto);
+  }
+
+  @Delete(':id')
+  cancel(@Req() request: { user: { id: string } }, @Param('id') id: string) {
+    return this.reservations.cancel(request.user.id, id);
   }
 }

@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { NotificationsService } from '../notifications/notifications.service';
 import { ReservationsGateway } from './reservations.gateway';
+import { AvailabilityDto } from './dto/availability.dto';
 
 @Injectable()
 export class ReservationsService {
@@ -49,5 +50,21 @@ export class ReservationsService {
       include: { room: { include: { workspace: true } } },
       orderBy: { startsAt: 'asc' },
     });
+  }
+
+  async cancel(userId: string, reservationId: string) {
+    const reservation = await this.prisma.reservation.findFirst({ where: { id: reservationId, userId } });
+    if (!reservation) throw new ConflictException('Reserva não encontrada.');
+    return this.prisma.reservation.update({ where: { id: reservationId }, data: { status: 'CANCELLED' } });
+  }
+
+  async availability(roomId: string, dto: AvailabilityDto) {
+    const startsAt = new Date(dto.startsAt);
+    const endsAt = new Date(dto.endsAt);
+    if (startsAt >= endsAt) throw new ConflictException('Intervalo de consulta inválido.');
+    const conflict = await this.prisma.reservation.findFirst({
+      where: { roomId, status: { in: ['PENDING', 'CONFIRMED'] }, startsAt: { lt: endsAt }, endsAt: { gt: startsAt } },
+    });
+    return { available: !conflict, startsAt, endsAt };
   }
 }
