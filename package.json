@@ -1,0 +1,12 @@
+{
+  "name": "coworkspace",
+  "private": true,
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @coworkspace/api --filter @coworkspace/web dev",
+    "db:up": "docker compose up -d postgres redis",
+    "db:down": "docker compose down",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test"
+  }
+}

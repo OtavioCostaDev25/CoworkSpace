@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  MEMBER
+  MANAGER
+  ADMIN
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  role         UserRole      @default(MEMBER)
+  reservations Reservation[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Workspace {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  address     String
+  rooms       Room[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Room {
+  id           String        @id @default(cuid())
+  workspaceId  String
+  name         String
+  capacity     Int
+  hourlyRate   Decimal       @db.Decimal(10, 2)
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  reservations Reservation[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([workspaceId])
+}
+
+model Reservation {
+  id        String            @id @default(cuid())
+  userId    String
+  roomId    String
+  startsAt  DateTime
+  endsAt    DateTime
+  status    ReservationStatus @default(PENDING)
+  user      User              @relation(fields: [userId], references: [id])
+  room      Room              @relation(fields: [roomId], references: [id])
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@index([roomId, startsAt, endsAt])
+  @@index([userId, startsAt])
+}
