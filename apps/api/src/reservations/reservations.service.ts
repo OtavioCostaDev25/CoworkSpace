@@ -2,10 +2,11 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { NotificationsService } from '../notifications/notifications.service';
+import { ReservationsGateway } from './reservations.gateway';
 
 @Injectable()
 export class ReservationsService {
-  constructor(private readonly prisma: PrismaService, private readonly notifications: NotificationsService) {}
+  constructor(private readonly prisma: PrismaService, private readonly notifications: NotificationsService, private readonly gateway: ReservationsGateway) {}
 
   async create(userId: string, dto: CreateReservationDto) {
     const startsAt = new Date(dto.startsAt);
@@ -38,6 +39,7 @@ export class ReservationsService {
       include: { room: true, user: true },
     });
     await this.notifications.enqueueReservationCreated(reservation.user.email, reservation.id);
+    this.gateway.reservationCreated({ id: reservation.id, roomId: reservation.roomId, startsAt: reservation.startsAt, endsAt: reservation.endsAt });
     return reservation;
   }
 
